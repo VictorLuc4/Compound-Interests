@@ -2,34 +2,27 @@
 
 import sys
 import math
+import argparse
 
-# arg 1 = pourcentage par mois
-# arg 2 = ajout par mois
-# arg 3 = duree en mois
-# arg 4 = starting value
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--percent", help="Monthly percentage to add.", default=0.2, type=float)
+parser.add_argument("-a", "--addon", help="Monthly amout you add.", default=100.0, type=float)
+parser.add_argument("-m", "--month", help="Duration in month", default=120.0, type=float)
+parser.add_argument("-s", "--starting", help="Starting value", default=1000.0, type=float)
+args = parser.parse_args()
 
-try:
-    percent = float(sys.argv[1])
-except IndexError:
-    percent = 0.2
-except ValueError:
-    print("python3 main.py <percentage> <monthly_added_value> <month_number> <value_starting_with>")
-    exit()
+print(args)
 
-try:
-    addon = float(sys.argv[2])
-    month  = float(sys.argv[3])
-    starting = float(sys.argv[4])
-except IndexError:
-    addon, month, starting = 100.0, 120.0, 1000.0
-
-value = starting
-for i in range(0, int(month)):
-    percent_to_add = value * (percent / 100)
+value = args.starting
+for i in range(0, int(args.month)):
+    percent_to_add = value * (args.percent / 100)
     value += math.floor(percent_to_add)
-    value += addon
+    value += args.addon
     if i != 0 and i % 12 == 0: 
         print(f"Year {i / 12}, value = {value}")
 
-print(f"Month {int(month)} = {'%.2f'%(value)} with an increase of {'%.2f'%(percent)}% and {'%.2f'%(addon)}$ per month, for {int(month)} months, starting with {'%.2f'%(starting)}$")
-
+print(f"""
+        Month {int(args.month)} = {'%.2f'%(value)} with an increase of 
+        {'%.2f'%(args.percent)}% and {'%.2f'%(args.addon)}$ per month, for 
+        {int(args.month)} months, starting with {'%.2f'%(args.starting)}$
+    """)
